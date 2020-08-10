@@ -9,22 +9,22 @@ export const Cards = () => {
 
   const [cards, setCards] = useState([])
 
-useEffect(() => {
+  useEffect(() => {
 
-  (async () => {
-    const {cards} = await api.index(4)
-    setCards(cards)
-  })()
+    (async () => {
+      const { cards } = await api.index(4)
+      setCards(cards)
+    })()
 
-}, [])
+  }, [])
 
-  const flipHandler = ({target}) => {
+  const flipHandler = ({ target }) => {
     console.log(target)
   }
 
   return (
-    cards.map( (card,i) => (
-      <Card image={card.image} suit={card.suit} value={card.value} key={i} handler={flipHandler}/>
+    cards.map((card, i) => (
+      <Card image={card.image} suit={card.suit} value={card.value} key={i} handler={flipHandler} />
     ))
   )
 }
