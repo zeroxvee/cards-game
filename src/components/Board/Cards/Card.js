@@ -7,7 +7,7 @@ export const Card = ({ flipped, matched, image, value, suit, handler}) => {
 
   return (
     <>
-    <img alt={`${value} of ${suit}`} src={image} onClick={handler}/>
+    <img alt={`${value} of ${suit}`} src={flipped ? image : 'https://source.unsplash.com/random/225x314'} onClick={handler}/>
     <p>{value} of {suit}</p>
     </>
   )

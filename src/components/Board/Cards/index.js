@@ -18,9 +18,13 @@ useEffect(() => {
 
 }, [])
 
+  const flipHandler = ({target}) => {
+    console.log(target)
+  }
+
   return (
     cards.map( (card,i) => (
-      <Card image={card.image} suit={card.suit} value={card.value} key={i}/>
+      <Card image={card.image} suit={card.suit} value={card.value} key={i} handler={flipHandler}/>
     ))
   )
 }
