@@ -1,10 +1,19 @@
 export default {
-  async index() {
-    const res = await fetch(
+  async index(numOfCards = 12) {
+    const deckRes = await fetch(
       `
       https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1`
 
     )
-  return await res.json()
+
+    const { deck_id } = await deckRes.json()
+
+    const cardRes = await fetch(`https://deckofcardsapi.com/api/deck/${deck_id}/draw/?count=${numOfCards}`)
+
+    return await cardRes.json()
+
+
+
+
   },
 }
