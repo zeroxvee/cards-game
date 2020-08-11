@@ -37,8 +37,14 @@ export const Cards = () => {
   return (
     <div className="container">
       {cards.map((card, i) => (
-
-        <Card image={card.image} suit={card.suit} value={card.value} key={i} handler={flipHandler} />
+        <Card
+        code={card.code}
+        id={card.id}
+        image={card.image}
+        suit={card.suit}
+        value={card.value}
+        key={i}
+        handler={flipHandler} />
       ))}
     </div>
   )
