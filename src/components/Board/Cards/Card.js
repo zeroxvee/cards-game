@@ -9,7 +9,9 @@ export const Card = ({ flipped, matched, image, value, suit, handler, code, id }
       <img alt={`${value} of ${suit}`}
       src={flipped ? image : 'https://source.unsplash.com/random/225x314'}
       data-id={id}
-      data-code={code}/>
+      data-code={code}
+      className={matched ? "matched" : null}
+      />
     </button>
   )
 }
