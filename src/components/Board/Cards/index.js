@@ -29,8 +29,10 @@ export const Cards = () => {
 
   }, [])
 
-  const flipHandler = ({ target }) => {
-    console.log(target)
+  const flipHandler = ({ target: {dataset}}) => {
+    console.log(dataset)
+    setFlippedCards(flippedCards => flippedCards.concat({id: dataset.id, code: dataset.code}))
+
   }
 
 
@@ -44,6 +46,7 @@ export const Cards = () => {
         suit={card.suit}
         value={card.value}
         key={i}
+        flipped={flippedCards}
         handler={flipHandler} />
       ))}
     </div>

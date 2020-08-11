@@ -5,13 +5,12 @@ export const Card = ({ flipped, matched, image, value, suit, handler, code, id }
 
 
   return (
-    <>
+    <button onClick={handler}>
       <img alt={`${value} of ${suit}`}
       src={flipped ? image : 'https://source.unsplash.com/random/225x314'}
-      onClick={handler}
       data-id={id}
       data-code={code}/>
-    </>
+    </button>
   )
 }
 
