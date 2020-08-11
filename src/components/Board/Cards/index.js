@@ -16,9 +16,13 @@ export const Cards = () => {
 
     (async () => {
       const { cards } = await api.index(4)
-      //Duplicate the cards
+
       //Assign each one a unique id, by using code and current index
-      const cardsWithDups = cards.concat(Array.from(cards))
+      const cardsWithDups = JSON.parse(JSON.stringify(cards.concat(Array.from(cards)))).map((card, i) => {
+        card.id = `${card.code}-${i}`
+        return card
+      })
+
 
       setCards(cardsWithDups)
     })()
