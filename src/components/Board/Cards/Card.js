@@ -20,7 +20,7 @@ Card.propTypes = {
   code: PropTypes.string,
   flipped: PropTypes.bool,
   handler: PropTypes.func,
-  id: PropTypes.number,
+  id: PropTypes.string,
   image: PropTypes.string.isRequired,
   matched: PropTypes.bool,
   suit: PropTypes.string,
