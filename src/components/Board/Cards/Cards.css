@@ -11,6 +11,7 @@ button {}
 .matched {
   animation-duration: 0.75s;
   animation-name: flipOutX;
+  animation-fill-mode: both;
   backface-visibility: visible;
 }
 

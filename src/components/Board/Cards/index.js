@@ -7,6 +7,13 @@ import { Card } from './Card'
 export const Cards = ({ cards }) => {
 
   const [flippedCards, setFlippedCards] = useState([])
+  const [matchedCards, setMatchedCards] = useState([])
+
+  useEffect(() => {
+    if (flippedCards[0]?.code === flippedCards[1]?.code) {
+      setMatchedCards(prev => prev.concat(flippedCards[0]?.code))
+    }
+  },[flippedCards])
 
   //Handling flip
   const flipHandler = ({ target: { dataset } }) => {
@@ -20,6 +27,7 @@ export const Cards = ({ cards }) => {
       })
       )
     }
+
   }
 
   //Render components
@@ -29,6 +37,10 @@ export const Cards = ({ cards }) => {
         //
         if (card.id === flippedCards[0]?.id || card.id === flippedCards[1]?.id) {
           card.flipped = true
+        }
+
+        if (matchedCards.includes(card.code)) {
+          card.matched = true
         }
 
         return <Card
