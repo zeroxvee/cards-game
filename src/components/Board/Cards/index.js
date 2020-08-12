@@ -4,37 +4,17 @@ import PropTypes from 'prop-types'
 import './Cards.css'
 import { Card } from './Card'
 
-export const Cards = ({cards}) => {
+export const Cards = ({ cards }) => {
 
   const [flippedCards, setFlippedCards] = useState([])
-
-  //Check if 2 flipped cards are the same ID
-  // useEffect(() => {
-
-  //   setCards(prev => prev.map(card => {
-  //     if (card.id === flippedCards[0].id || flippedCards[1]?.id) {
-  //       card.flipped = true
-  //     } return card
-  //   })
-  //   )
-
-  //   if (flippedCards[0]?.code === flippedCards[1]?.code) {
-  //     cards.map((card) => {
-  //       if (card.id === flippedCards[0].id || flippedCards[1]?.id) {
-  //         card.matched = true
-  //         return card
-  //       }
-  //     })
-  //   }
-
-  // }, [flippedCards])
 
   //Handling flip
   const flipHandler = ({ target: { dataset } }) => {
     if (!flippedCards.length) {
       setFlippedCards(flippedCards => flippedCards.concat({ id: dataset.id, code: dataset.code })
       )
-    } else if (flippedCards[0].id !== dataset.id) {
+      //Make sure same card wasn't clicked twice
+    } else if (flippedCards.length < 2 && flippedCards[0].id !== dataset.id) {
       setFlippedCards(flippedCards => flippedCards.concat({
         id: dataset.id, code: dataset.code
       })
@@ -45,8 +25,13 @@ export const Cards = ({cards}) => {
   //Render components
   return (
     <div className="container">
-      {cards.map((card, i) => (
-        <Card
+      {cards.map((card, i) => {
+        //
+        if (card.id === flippedCards[0]?.id || card.id === flippedCards[1]?.id) {
+          card.flipped = true
+        }
+
+        return <Card
           code={card.code}
           id={card.id}
           image={card.image}
@@ -57,7 +42,9 @@ export const Cards = ({cards}) => {
           handler={flipHandler}
           matched={card.matched}
         />
-      ))}
+      }
+      )
+      }
     </div>
   )
 }

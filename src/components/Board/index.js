@@ -8,6 +8,7 @@ import api from 'api'
 export const Board = () => {
 
   const [cards, setCards] = useState([])
+  const [matchedCard, setMacthedCard] = useState([])
 
   //Async cards fetch
   useEffect(() => {

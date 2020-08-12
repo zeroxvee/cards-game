@@ -10,4 +10,4 @@ export const Timer = ({ toggle }) => {
   )
 }
 
-Timer.propTypes = {toggle: PropTypes.func.isRequired}
+Timer.propTypes = {toggle: PropTypes.func}
