@@ -10,8 +10,8 @@ button {}
 
 .matched {
   animation-duration: 0.75s;
-  animation-name: flipOutX;
   animation-fill-mode: both;
+  animation-name: flipOutX;
   backface-visibility: visible;
 }
 

@@ -4,24 +4,35 @@ import PropTypes from 'prop-types'
 import './Cards.css'
 import { Card } from './Card'
 
-export const Cards = ({ cards }) => {
+export const Cards = ({ cards, handler }) => {
 
   const [flippedCards, setFlippedCards] = useState([])
   const [matchedCards, setMatchedCards] = useState([])
 
   useEffect(() => {
-    if (flippedCards[0]?.code === flippedCards[1]?.code) {
-      setMatchedCards(prev => prev.concat(flippedCards[0]?.code))
+    if (flippedCards.length && flippedCards[0].code === flippedCards[1]?.code) {
+      setMatchedCards((prev) => prev.concat(flippedCards[0]?.code))
+      if (matchedCards.length === cards.length/2-1) {
+        handler(false)
+      }
+      setFlippedCards([])
     }
-  },[flippedCards])
+    if (flippedCards.length === 2) {
+      setTimeout(() => {
+        setFlippedCards([])
+      }, 3000)
+
+    }
+
+  }, [flippedCards])
 
   //Handling flip
   const flipHandler = ({ target: { dataset } }) => {
-    if (!flippedCards.length) {
+    if (dataset && !flippedCards.length) {
       setFlippedCards(flippedCards => flippedCards.concat({ id: dataset.id, code: dataset.code })
       )
       //Make sure same card wasn't clicked twice
-    } else if (flippedCards.length < 2 && flippedCards[0].id !== dataset.id) {
+    } else if (flippedCards[0].id !== dataset.id && flippedCards.length < 2) {
       setFlippedCards(flippedCards => flippedCards.concat({
         id: dataset.id, code: dataset.code
       })
