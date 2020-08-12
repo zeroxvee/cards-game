@@ -2,49 +2,32 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import './Cards.css'
-
-import api from 'api'
-
 import { Card } from './Card'
 
-export const Cards = () => {
+export const Cards = ({cards}) => {
 
-  const [cards, setCards] = useState([])
   const [flippedCards, setFlippedCards] = useState([])
 
-  //Async cards fetch
-  useEffect(() => {
-    (async () => {
-      const { cards } = await api.index(4)
-      //Assign each one a unique id, by using code and current index
-      const cardsWithDups = JSON.parse(JSON.stringify(cards.concat(Array.from(cards)))).map((card, i) => {
-        card.id = `${card.code}-${i}`
-        return card
-      })
-      setCards(cardsWithDups)
-    })()
-  }, [])
-
   //Check if 2 flipped cards are the same ID
-  useEffect(() => {
+  // useEffect(() => {
 
-    setCards(prev => prev.map(card => {
-      if (card.id === flippedCards[0].id || flippedCards[1]?.id) {
-        card.flipped = true
-      } return card
-    })
-    )
+  //   setCards(prev => prev.map(card => {
+  //     if (card.id === flippedCards[0].id || flippedCards[1]?.id) {
+  //       card.flipped = true
+  //     } return card
+  //   })
+  //   )
 
-    if (flippedCards[0]?.code === flippedCards[1]?.code) {
-      cards.map((card) => {
-        if (card.id === flippedCards[0].id || flippedCards[1]?.id) {
-          card.matched = true
-          return card
-        }
-      })
-    }
+  //   if (flippedCards[0]?.code === flippedCards[1]?.code) {
+  //     cards.map((card) => {
+  //       if (card.id === flippedCards[0].id || flippedCards[1]?.id) {
+  //         card.matched = true
+  //         return card
+  //       }
+  //     })
+  //   }
 
-  }, [flippedCards])
+  // }, [flippedCards])
 
   //Handling flip
   const flipHandler = ({ target: { dataset } }) => {
@@ -80,5 +63,6 @@ export const Cards = () => {
 }
 
 Cards.propTypes = {
-
+  cards: PropTypes.array.isRequired,
+  handler: PropTypes.func,
 }
