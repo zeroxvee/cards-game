@@ -23,39 +23,36 @@ export const Cards = ({ handler }) => {
   }, [])
 
   //Handling flip
-  const flipHandler = ({ currentTarget: {dataset}}) => {
+  const flipHandler = ({ currentTarget: { dataset } }) => {
     handler(true)
-    const {id} = dataset
-    const {code} = dataset
+    const { id, code } = dataset
 
-    const flippedCards = cards.filter(card => id === card.id ? card.flipped = true : card)
-
-    if (!flippedCards.length) {
-      setCards(
-        cards.map(card => {
-          if (card.id === id) {
-            cards.flipped = true
-          }
-
-          return card
-        })
-      )
-    }
+    const flippedCards = cards.filter(({ flipped }) => flipped)
 
     if (flippedCards.length < 2) {
       setCards(
         cards.map(card => {
           if (card.id === id) {
-            cards.flipped = true
+            card.flipped = true
           }
 
           return card
         })
       )
+
+      if (flippedCards[0]?.code === code) {
+        setCards(
+          cards.map(card => {
+            if (card.code === code) {
+
+              card.matched = true
+            }
+            return card
+          })
+        )
+
+      }
     }
-
-    //check if any cards are currently flipped
-
   }
 
   //Render components
