@@ -6,99 +6,84 @@ import { Card } from './Card'
 import api from 'api'
 
 export const Cards = ({ handler }) => {
-
   const [cards, setCards] = useState([])
 
-  //Async cards fetch
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       const { cards } = await api.index(4)
-      //Assign each one a unique id, by using code and current index
-      const cardDups = JSON.parse(JSON.stringify(cards.concat(Array.from(cards)))).map((card, i) => {
-        card.id = `${card.code}-${i}`
-        return card
+
+      // Duplicate the cards and then add unique id to each one (⚠️ 'references')
+      const cardsWithIDs = cards.concat(Array.from(cards)).map((card, i) => {
+        // We can do the 'spread' 'shallow copy' for these non-nested objects
+        const cardCopy = { ...card }
+        cardCopy.id = `${cardCopy.code}-${i}`
+        return cardCopy
       })
-      setCards(cardDups)
+
+      setCards(cardsWithIDs)
     })()
   }, [])
 
-  //Handling flip
   const flipHandler = ({ currentTarget: { dataset } }) => {
-    handler(true)
-    const { id, code } = dataset
+    const { code, id } = dataset
 
-    const flippedCards = cards.filter(({ flipped }) => flipped)
+    const flippedCards = cards.filter(({ flipped, matched }) => flipped && !matched)
+
+    handler(true)
 
     if (flippedCards.length < 2) {
-      setCards(
-        truthifyCards("id", "flipped", id)
-      )
+      setCards(truthifyCards("id", "flipped", id))
 
+      // If the codes of the currently flipped card and the dataset match...
       if (flippedCards[0]?.code === code) {
-        setCards(
-          truthifyCards('code', 'matched', code)
-        )
+        setCards(truthifyCards("code", "matched", code))
 
-        if(!cards.find(({matched}) => !matched)) {
+        if (!cards.find(({ matched }) => !matched)) {
           handler(false)
         }
-
-
-
+      } else if (flippedCards[0]) {
+        setTimeout(() => {
+          setCards(resetFlippedCards())
+        }, 1500)
       }
     }
-
-    if (flippedCards[0]) {
-      setTimeout(() => {
-
-        setCards(
-          cards.map(card => {
-            card.flipped = false
-            return card
-          }
-          )
-
-          , 3000)
-      })
-    }
-
   }
 
-  const truthifyCards = (k2locate, k2change, val2match) => {
-    cards.map(card => {
-      if (card[k2locate] === [val2match]) {
-        card[k2change] = true
+  const resetFlippedCards = () =>
+    cards.map((card) => {
+      card.flipped = false
+      return card
+    })
+
+  const truthifyCards = (k2Locate, k2Change, val2Match) =>
+    cards.map((card) => {
+      if (card[k2Locate] === val2Match) {
+        card[k2Change] = true
       }
       return card
     })
 
-  }
-
-
-
-  //Render components
-  return (
-    <div className="container">
-      {cards.map((card, i) => (
+  const renderCards = () =>
+    // 'suit' and 'value' are just for alt tag
+    cards.map(({ code, flipped, matched, id, image, suit, value }, i) => {
+      return (
         <Card
-          code={card.code}
-          id={card.id}
-          image={card.image}
-          suit={card.suit}
-          value={card.value}
-          key={i}
-          flipped={card.flipped}
+          code={code}
+          flipped={flipped}
+          id={id}
+          image={image}
+          matched={matched}
+          suit={suit}
+          value={value}
           handler={flipHandler}
-          matched={card.matched}
+          key={i}
         />
       )
-      )
-      }
-    </div>
-  )
+    })
+
+  return <div>{renderCards()}</div>
 }
 
 Cards.propTypes = {
-  cards: PropTypes.array.isRequired,
   handler: PropTypes.func,
 }
