@@ -31,29 +31,50 @@ export const Cards = ({ handler }) => {
 
     if (flippedCards.length < 2) {
       setCards(
-        cards.map(card => {
-          if (card.id === id) {
-            card.flipped = true
-          }
-
-          return card
-        })
+        truthifyCards("id", "flipped", id)
       )
 
       if (flippedCards[0]?.code === code) {
         setCards(
-          cards.map(card => {
-            if (card.code === code) {
-
-              card.matched = true
-            }
-            return card
-          })
+          truthifyCards('code', 'matched', code)
         )
+
+        if(!cards.find(({matched}) => !matched)) {
+          handler(false)
+        }
+
+
 
       }
     }
+
+    if (flippedCards[0]) {
+      setTimeout(() => {
+
+        setCards(
+          cards.map(card => {
+            card.flipped = false
+            return card
+          }
+          )
+
+          , 3000)
+      })
+    }
+
   }
+
+  const truthifyCards = (k2locate, k2change, val2match) => {
+    cards.map(card => {
+      if (card[k2locate] === [val2match]) {
+        card[k2change] = true
+      }
+      return card
+    })
+
+  }
+
+
 
   //Render components
   return (
