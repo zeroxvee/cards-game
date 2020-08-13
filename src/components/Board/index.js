@@ -1,26 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 import { Timer } from './Timer'
 import { Cards } from './Cards'
 
-import api from 'api'
-
 export const Board = () => {
-  const [cards, setCards] = useState([])
-  const [toggleTimer, setToggleTimer] = useState(false)
 
-  //Async cards fetch
-  useEffect(() => {
-    (async () => {
-      const { cards } = await api.index(4)
-      //Assign each one a unique id, by using code and current index
-      const cardsWithDups = JSON.parse(JSON.stringify(cards.concat(Array.from(cards)))).map((card, i) => {
-        card.id = `${card.code}-${i}`
-        return card
-      })
-      setCards(cardsWithDups)
-    })()
-  }, [])
+  const [toggleTimer, setToggleTimer] = useState(false)
 
   const handleCards = (toggle) => {
     setToggleTimer(toggle)
@@ -28,7 +13,7 @@ export const Board = () => {
 
   return (
     <main>
-      <Cards cards={cards} handler={handleCards}/>
+      <Cards handler={handleCards}/>
       <Timer toggle={toggleTimer}/>
     </main>
   )

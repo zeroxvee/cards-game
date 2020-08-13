@@ -3,58 +3,66 @@ import PropTypes from 'prop-types'
 
 import './Cards.css'
 import { Card } from './Card'
+import api from 'api'
 
-export const Cards = ({ cards, handler }) => {
+export const Cards = ({ handler }) => {
 
-  const [flippedCards, setFlippedCards] = useState([])
-  const [matchedCards, setMatchedCards] = useState([])
+  const [cards, setCards] = useState([])
 
+  //Async cards fetch
   useEffect(() => {
-    if (flippedCards.length && flippedCards[0].code === flippedCards[1]?.code) {
-      setMatchedCards((prev) => prev.concat(flippedCards[0]?.code))
-      if (matchedCards.length === cards.length/2-1) {
-        handler(false)
-      }
-      setFlippedCards([])
-    }
-    if (flippedCards.length === 2) {
-      setTimeout(() => {
-        setFlippedCards([])
-      }, 3000)
-
-    }
-
-  }, [flippedCards])
+    (async () => {
+      const { cards } = await api.index(4)
+      //Assign each one a unique id, by using code and current index
+      const cardDups = JSON.parse(JSON.stringify(cards.concat(Array.from(cards)))).map((card, i) => {
+        card.id = `${card.code}-${i}`
+        return card
+      })
+      setCards(cardDups)
+    })()
+  }, [])
 
   //Handling flip
-  const flipHandler = ({ target: { dataset } }) => {
-    if (dataset && !flippedCards.length) {
-      setFlippedCards(flippedCards => flippedCards.concat({ id: dataset.id, code: dataset.code })
-      )
-      //Make sure same card wasn't clicked twice
-    } else if (flippedCards[0].id !== dataset.id && flippedCards.length < 2) {
-      setFlippedCards(flippedCards => flippedCards.concat({
-        id: dataset.id, code: dataset.code
-      })
+  const flipHandler = ({ currentTarget: {dataset}}) => {
+    handler(true)
+    const {id} = dataset
+    const {code} = dataset
+
+    const flippedCards = cards.filter(card => id === card.id ? card.flipped = true : card)
+
+    if (!flippedCards.length) {
+      setCards(
+        cards.map(card => {
+          if (card.id === id) {
+            cards.flipped = true
+          }
+
+          return card
+        })
       )
     }
+
+    if (flippedCards.length < 2) {
+      setCards(
+        cards.map(card => {
+          if (card.id === id) {
+            cards.flipped = true
+          }
+
+          return card
+        })
+      )
+    }
+
+    //check if any cards are currently flipped
 
   }
 
   //Render components
   return (
     <div className="container">
-      {cards.map((card, i) => {
-        //
-        if (card.id === flippedCards[0]?.id || card.id === flippedCards[1]?.id) {
-          card.flipped = true
-        }
-
-        if (matchedCards.includes(card.code)) {
-          card.matched = true
-        }
-
-        return <Card
+      {cards.map((card, i) => (
+        <Card
           code={card.code}
           id={card.id}
           image={card.image}
@@ -65,7 +73,7 @@ export const Cards = ({ cards, handler }) => {
           handler={flipHandler}
           matched={card.matched}
         />
-      }
+      )
       )
       }
     </div>
